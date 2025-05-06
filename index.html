@@ -8,6 +8,11 @@
         body {
             height: 100%;
             margin: 0;
+            background-image: url('lol.png');  /* Tên ảnh bạn đã upload */
+            background-size: cover;                  /* Phủ kín nền, không méo ảnh */
+            background-position: center center;      /* Căn giữa */
+            background-repeat: no-repeat;            /* Không lặp ảnh */
+            background-attachment: fixed;            /* Ảnh nền cố định khi cuộn */
         }
 
         .container {
@@ -144,6 +149,7 @@
 </head>
 
 <body>
+
     <div class="container">
         <!-- Tạo một thẻ chứa (div) cho công tắc chuyển đổi (switch) -->
         <label class="switch">
