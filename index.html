@@ -198,7 +198,7 @@
             onValues: (values) => {
                 /* Lấy trạng thái hiện tại của đèn LED từ giá trị của cấu hình */
                 const stateLed1 = values[configLed1.id]?.value;
-                const stateLed2 = values[configLed2.id]?.value;
+                // const stateLed2 = values[configLed2.id]?.value;
 
                 /* Kiểm tra nếu trạng thái đèn thay đổi */
                 if (newStatusLed1 !== stateLed1) {
@@ -206,10 +206,10 @@
                     theSwitch_1.checked = stateLed1; /* Thay đổi trạng thái của switch dựa trên trạng thái đèn */
                 }
 
-                if (newStatusLed2 !== stateLed2) {
-                    newStatusLed2 = stateLed2;
-                    theSwitch_2.checked = stateLed2;
-                }
+                // if (newStatusLed2 !== stateLed2) {
+                //     newStatusLed2 = stateLed2;
+                //     theSwitch_2.checked = stateLed2;
+                // }
             },
         });
 
@@ -222,13 +222,13 @@
             }
         });
 
-        theSwitch_2.addEventListener('click', () => {
-            if (newStatusLed2 === 1) {
-                eraWidget.triggerAction(actions[3]?.action, null); // tắt LED 2
-            } else {
-                eraWidget.triggerAction(actions[2]?.action, null); // bật LED 2
-            }
-        });
+        // theSwitch_2.addEventListener('click', () => {
+        //     if (newStatusLed2 === 1) {
+        //         eraWidget.triggerAction(actions[3]?.action, null); // tắt LED 2
+        //     } else {
+        //         eraWidget.triggerAction(actions[2]?.action, null); // bật LED 2
+        //     }
+        // });
     </script>
 
 </body>
