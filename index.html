@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .container {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+            font-size: 17px;
+            position: relative;
+            display: inline-block;
+            width: 5em;
+            height: 2.5em;
+            user-select: none;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch .cb {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .toggle {
+            position: absolute;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background-color: #373737;
+            border-radius: 0.1em;
+            transition: 0.4s;
+            text-transform: uppercase;
+            font-weight: 700;
+            overflow: hidden;
+            box-shadow: -0.3em 0 0 0 #373737, -0.3em 0.3em 0 0 #373737,
+                0.3em 0 0 0 #373737, 0.3em 0.3em 0 0 #373737, 0 0.3em 0 0 #373737;
+        }
+
+        .toggle>.left {
+            position: absolute;
+            display: flex;
+            width: 50%;
+            height: 88%;
+            background-color: #f3f3f3;
+            color: #373737;
+            left: 0;
+            bottom: 0;
+            align-items: center;
+            justify-content: center;
+            transform-origin: right;
+            transform: rotateX(10deg);
+            transform-style: preserve-3d;
+            transition: all 150ms;
+        }
+
+        .left::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: rgb(206, 206, 206);
+            transform-origin: center left;
+            transform: rotateY(90deg);
+        }
+
+        .left::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: rgb(112, 112, 112);
+            transform-origin: center bottom;
+            transform: rotateX(90deg);
+        }
+
+        .toggle>.right {
+            position: absolute;
+            display: flex;
+            width: 50%;
+            height: 88%;
+            background-color: #f3f3f3;
+            color: rgb(206, 206, 206);
+            right: 1px;
+            bottom: 0;
+            align-items: center;
+            justify-content: center;
+            transform-origin: left;
+            transform: rotateX(10deg) rotateY(-45deg);
+            transform-style: preserve-3d;
+            transition: all 150ms;
+        }
+
+        .right::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: rgb(206, 206, 206);
+            transform-origin: center right;
+            transform: rotateY(-90deg);
+        }
+
+        .right::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: rgb(112, 112, 112);
+            transform-origin: center bottom;
+            transform: rotateX(90deg);
+        }
+
+        .switch input:checked+.toggle>.left {
+            transform: rotateX(10deg) rotateY(45deg);
+            color: rgb(206, 206, 206);
+        }
+
+        .switch input:checked+.toggle>.right {
+            transform: rotateX(10deg) rotateY(0deg);
+            color: #487bdb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Tạo một thẻ chứa (div) cho công tắc chuyển đổi (switch) -->
+        <label class="switch">
+            <!-- Checkbox để người dùng bật/tắt trạng thái -->
+            <input id="the_switch" class="cb" type="checkbox" />
+            <!-- Thẻ span để tạo giao diện cho công tắc với hai trạng thái "on" và "off" -->
+            <span class="toggle">
+                <span class="left">off</span>
+                <span class="right">on</span>
+            </span>
+        </label>
+    </div>
+    <!-- Tải thư viện E-Ra Widget -->
+    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.1.3/src/index.js"></script>
+    <script>
+        const theSwitch = document.getElementById('the_switch');  /* Tạo tham chiếu tới phần tử HTML có id là 'the_switch' */
+        let configLed = null, newStatusLed = null, actions = [];  /* Khởi tạo các biến dùng để lưu cấu hình và trạng thái đèn LED  */
+
+        /* Tạo đối tượng EraWidget và gọi hàm khởi tạo với các cấu hình cần thiết */
+        const eraWidget = new EraWidget();
+        eraWidget.init({
+            needRealtimeConfigs: true,         /* Cần giá trị hiện thời */
+            needHistoryConfigs: true,          /* Cần giá trị lịch sử */
+            needActions: true,                 /* Cần các hành động (ví dụ Bật/Tắt đèn) */
+            maxRealtimeConfigsCount: 3,        /* Số lượng tối đa giá trị hiện thời */
+            maxHistoryConfigsCount: 1,         /* Số lượng tối đa giá trị lịch sử */
+            maxActionsCount: 2,                /* Số lượng tối đa các hành động có thể kích hoạt */
+            minRealtimeConfigsCount: 0,        /* Số lượng tối thiểu giá trị hiện thời */
+            minHistoryConfigsCount: 0,         /* Số lượng tối thiểu giá trị lịch sử */
+            minActionsCount: 0,                /* Số lượng tối thiểu hành động */
+
+            /* Hàm callback được gọi khi có cấu hình được nhận từ server */
+            onConfiguration: (configuration) => {
+                /* Cập nhật cấu hình đèn LED từ cấu hình thời gian thực đầu tiên */
+                configLed = configuration.realtime_configs[0];
+                actions = configuration.actions; /* Lưu danh sách các hành động được nhận */
+            },
+
+            /* Hàm callback được gọi khi nhận giá trị mới từ server */
+            onValues: (values) => {
+                /* Lấy trạng thái hiện tại của đèn LED từ giá trị của cấu hình */
+                const stateLed = values[configLed.id].value;
+
+                /* Kiểm tra nếu trạng thái đèn thay đổi */
+                if (newStatusLed !== stateLed) {
+                    newStatusLed = stateLed;      /* Cập nhật trạng thái mới của đèn */
+                    theSwitch.checked = stateLed; /* Thay đổi trạng thái của switch dựa trên trạng thái đèn */
+                }
+            },
+        });
+
+        /* Thêm sự kiện khi người dùng nhấp vào switch để kích hoạt hành động */
+        theSwitch.addEventListener('click', () => {
+            if (newStatusLed === 1) {
+                eraWidget.triggerAction(actions[1]?.action, null); /* Kích hoạt hành động 'Tắt' */
+            } else {
+                eraWidget.triggerAction(actions[0]?.action, null); /* Kích hoạt hành động 'Bật' */
+            }
+        });
+    </script>
+
+</body>
+
+</html>
