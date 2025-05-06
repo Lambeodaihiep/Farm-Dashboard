@@ -197,8 +197,8 @@
             /* Hàm callback được gọi khi nhận giá trị mới từ server */
             onValues: (values) => {
                 /* Lấy trạng thái hiện tại của đèn LED từ giá trị của cấu hình */
-                const stateLed1 = values[configLed1.id].value;
-                const stateLed2 = values[configLed2.id].value;
+                const stateLed1 = values[configLed1.id]?.value;
+                const stateLed2 = values[configLed2.id]?.value;
 
                 /* Kiểm tra nếu trạng thái đèn thay đổi */
                 if (newStatusLed1 !== stateLed1) {
