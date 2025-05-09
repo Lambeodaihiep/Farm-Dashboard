@@ -29,6 +29,8 @@ eraWidget.init({
         actions = configuration.actions; /* Lưu danh sách các hành động được nhận */
     },
 
+    
+
     /* Hàm callback được gọi khi nhận giá trị mới từ server */
     onValues: (values) => {
         /* Lấy trạng thái hiện tại của đèn LED từ giá trị của cấu hình */
@@ -47,6 +49,16 @@ eraWidget.init({
         if (newStatusLed2 !== stateLed2) {
             newStatusLed2 = stateLed2;
             theSwitch_2.checked = stateLed2;
+        }
+    },
+
+    onHistoryValues: (history) => {
+        const temperatureHistory = history[configTemperature.id];
+        if (temperatureHistory && window.setInitialChartData) {
+            const chartData = temperatureHistory.map(item => [
+                new Date(item.timestamp).getTime(), item.value
+            ]);
+            window.setInitialChartData(chartData); // gọi hàm từ chart_script.js
         }
     },
 });

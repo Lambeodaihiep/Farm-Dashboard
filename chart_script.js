@@ -1,3 +1,11 @@
+window.setInitialChartData = function (historyData) {
+    if (window.myTemperatureChart) {
+        window.myTemperatureChart.series[0].setData(historyData);
+        dataBuffer.length = 0;
+        dataBuffer.push(...historyData);
+    }
+};
+
 // Existing Highcharts code
 const onChartLoad = function () {
     const chart = this,
@@ -25,14 +33,14 @@ const data = (function () {
 
     for (let i = -19; i <= 0; i += 1) {
         data.push({
-            x: time + i * 1000,
+            x: time + i * 600000,
             y: 0 // Giá trị mặc định cho dữ liệu ban đầu
         });
     }
     return data;
 }());
 
-Highcharts.chart('container', {
+window.myTemperatureChart = Highcharts.chart('container', {
     chart: {
         type: 'areaspline',
         events: {
