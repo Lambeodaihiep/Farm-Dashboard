@@ -5,7 +5,7 @@ const onChartLoad = function () {
 
     setInterval(function () {
         const x = (new Date()).getTime(), // thời gian hiện tại
-            y = sensor1Value; // Giá trị giá trị thực tế
+            y = temperatureValue; // Giá trị thực tế
 
         series.addPoint([x, y], true, true);
         dataBuffer.push([x, y]);
