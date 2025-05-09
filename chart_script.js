@@ -15,7 +15,7 @@ const onChartLoad = function () {
         while (dataBuffer.length > 0 && dataBuffer[0][0] < thirtyMinutesAgo) {
             dataBuffer.shift();
         }
-    }, 1000);
+    }, 600000);
 };
 
 // Create the initial data
@@ -45,7 +45,7 @@ Highcharts.chart('container', {
     },
 
     title: {
-        text: 'Live sensor1 Data'
+        text: 'Temperature'
     },
 
     accessibility: {
@@ -69,7 +69,7 @@ Highcharts.chart('container', {
 
     yAxis: {
         title: {
-            text: 'sensor1'
+            text: '( \u2103 )'
         },
         min: -20, // Giá trị tối thiểu của trục Y
         max: 80, // Giá trị tối đa của trục Y
@@ -98,7 +98,7 @@ Highcharts.chart('container', {
 
     series: [
         {
-            name: 'sensor1s',
+            name: 'Temperature',
             lineWidth: 2,
             color: Highcharts.getOptions().colors[6],
             data,
